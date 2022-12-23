@@ -1,0 +1,21 @@
+
+spring:
+  profiles:
+    active: mysql
+---
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/BATCH
+    username: root
+    password: 247248Gp!!?
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      auto-commit: false
+      connection-test-query: SELECT 1
+      minimum-idle: 10
+      maximum-pool-size: 50
+      transaction-isolation: TRANSACTION_READ_UNCOMMITTED
+      pool-name: pool-tester
+  config:
+    activate:
+      on-profile: mysql
