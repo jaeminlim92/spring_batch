@@ -2,6 +2,11 @@
 spring:
   profiles:
     active: mysql
+  batch:
+    job:
+      names: ${job.name:NONE}
+
+
 ---
 spring:
   datasource:
