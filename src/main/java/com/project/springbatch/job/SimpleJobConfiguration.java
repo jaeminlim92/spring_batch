@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,19 +33,36 @@ public class SimpleJobConfiguration {
     @Bean
     public Job simpleJob(){
         return jobBuilderFactory.get("simpleJob")
-                .start(step1())
+                .start(step1(null))
+                .next(step2(null))
                 .build();
     }
 
     @Bean
-    public Step step1() {
+    @JobScope
+    public Step step1(@Value("#{jobParameters[requestDate]}")String requestDate) {
         return stepBuilderFactory.get("simpleStep")
                 .tasklet((contribution, chunkContext) -> {
                     log.info("step1 시작");
+                    log.info("requestDate->{}", requestDate);
                     return RepeatStatus.FINISHED;
                 })
                 .build();
         
     }
+
+    @Bean
+    @JobScope
+    public Step step2(@Value("#{jobParameters[requestDate]}")String requestDate) {
+        return stepBuilderFactory.get("simpleStep2")
+                .tasklet((contribution, chunkContext) -> {
+                    log.info("step2 시작");
+                    log.info("requestDate->{}", requestDate);
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+
+    }
+
 
 }
